@@ -17,3 +17,8 @@ Terraform modules defining the Pegasus "homeprod" infrastructure.
 ### _config
 
 Data module that has outputs for configuration options shared by all resources in the "prod" environment, such as Proxmox connection details, datastore types, user ssh keys, etc.
+
+### lab-ansible-vm
+
+Creates an Ansible control node that can be used to manage prod resources, as well as test Ansible provisioning changes before they are promoted to another environment.
+
