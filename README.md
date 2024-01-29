@@ -12,3 +12,8 @@ Terraform modules defining the Pegasus "homeprod" infrastructure.
 
 - Module names ending in `-vm` create a Proxmox VM. The VM name is the module name, excluding this suffix.
 
+## Modules
+
+### _config
+
+Data module that has outputs for configuration options shared by all resources in the "prod" environment, such as Proxmox connection details, datastore types, user ssh keys, etc.
