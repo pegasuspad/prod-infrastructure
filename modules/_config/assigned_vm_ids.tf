@@ -26,6 +26,7 @@ locals {
     942100 = "freshrss-disks"
     # not legacy, but ... manual
     4000001 = "prod-ansible"
+    4000004 = "prod-proxy-passthrough"
     5000000 = "lab-proxy"
     94000001 = "prod-ansible-data"
   }

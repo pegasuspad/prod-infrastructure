@@ -3,6 +3,7 @@ locals {
     "10.111.1.1"   = "opnsense"
     "10.111.1.2"   = "pihole-01"
     "10.111.1.3"   = "pihole-02"
+    "10.111.1.4"   = "prod-proxy-passthrough"
     "10.111.1.5"   = "proxy" # combined
     "10.111.1.6"   = "proxy-filtered" # non-lab only
     "10.111.1.10"  = "proxmox-optiplex"

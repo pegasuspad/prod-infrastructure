@@ -2,6 +2,18 @@
 
 Terraform modules defining the Pegasus "homeprod" infrastructure.
 
+## Network
+
+- NAT port forwarding rules sends HTTP/HTTPS traffic to an nginx reverse proxy, `prod-proxy-passthrough`
+- `prod-proxy-passthrough` passes it through to the upstream server(s)
+- SNI is used to inspect the host name for a request without terminating TLS
+- Requests for `*.lab.pegasuspad.com` are routed to an nginx reverse proxy for lab services, `lab-proxy`
+- All other requests are routed to an nginx reverse proxy for production services, `prod-proxy`
+
+This structure is depicted visually below:
+
+[![](./docs/diagrams/network.drawio.svg)](./docs/diagrams/network.drawio.svg)
+
 ## Patterns and Conventions
 
 ### Glossary
@@ -22,3 +34,6 @@ Data module that has outputs for configuration options shared by all resources i
 
 Creates an Ansible control node that can be used to manage prod resources, as well as test Ansible provisioning changes before they are promoted to another environment.
 
+### prod-proxy-passthrough-vm
+
+Creates an nginx reverse proxy that serves as the main web entrypoint to our externally-accessible services. This proxy passes through TLS connections, and uses SNI to route requests to the appropriate environment-specific proxy (either `lab-proxy` or `prod-proxy`).
