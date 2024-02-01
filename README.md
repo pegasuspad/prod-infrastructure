@@ -14,6 +14,34 @@ This structure is depicted visually below:
 
 [![](./docs/diagrams/network.drawio.svg)](./docs/diagrams/network.drawio.svg)
 
+## Provisioning and Configuration
+
+New virtual machines are created using a two step process:
+
+- Terraform is used to provision (i.e. create) the virtual machine and any dependencies.
+- Ansible is then used to install and configure software on the machine.
+- Ongoing configuration management is then performed by Ansible and/or Harbormaster.
+
+The following diagram depicts the overall process, and the following sections describe the steps in more detail.
+
+[![](./docs/diagrams/provisioning.drawio.svg)](./docs/diagrams/provisioning.drawio.svg)
+
+### Provisioning with Terraform
+
+Terraform interfaces with the Proxmox server to create virtual machines and related resources (disk ISOs, cloud-init snippets, etc.). Terraform uses cloud-init to perform some minimal configuration of new hosts (creating a user for Ansible, installing required packages such as qemu-agent, etc.). In general, however, this configuration should be kept to a minimum. Specifically, Terraform _does not_ inject any secrets into newly provisioned VMs. This is to keep such secrets out of Terraform state, cloud-init metadata files, etc.
+
+### Configuration with Ansible
+
+Once a new host is provisioned, Terraform invokes a webhook on the Ansible control node and passes the name of the new host. This triggers the _provisoning_ process, where Ansible runs a playbook that installs the correct software on the VM and injects any secrets or other configuration. Some of the secrets stored on an Ansible node must be unlocked before they came be used for provisioning. This unlocking step must be completed manually by a human operator in an interactive terminal. As a result, there are several states the control node can be in, as depicted below:
+
+[![](./docs/diagrams/ansible-control-node-states.drawio.svg)](./docs/diagrams/ansible-control-node-states.drawio.svg)
+
+A newly-provisioned control node must first be manually "bootstrapped" by an administrator, using a script installed during provisioning. This will result in a fully-provisioned, but "locked" state. An administrator must execute a script to unlock the node before it can accept webhooks or process other provisioning tasks. If the machine is rebooted for any reason, it will revert to a locked state and must manually be unlocked again.
+
+### Ongoing Management
+
+TBD - ansible playbook and gitops with Harbormaster
+
 ## Patterns and Conventions
 
 ### Glossary
